@@ -1,5 +1,6 @@
-package com.sapashev;
+package com.sapashev.ReadConnectors;
 
+import com.sapashev.Order;
 import com.sapashev.interfaces.ReadConnector;
 
 /**

@@ -8,6 +8,6 @@ import com.sapashev.Order;
  * @since 21.06.2016
  * @version 1.0
  */
-public interface Removable <T> {
-    boolean remove(T element);
+public interface Removable {
+    boolean remove(int index);
 }
