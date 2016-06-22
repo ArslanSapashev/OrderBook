@@ -1,7 +1,7 @@
 package com.sapashev;
 
+import com.sapashev.interfaces.Operation;
 import com.sapashev.interfaces.OrderType;
-
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -50,9 +50,5 @@ public class Order {
 
     public OrderType getType () {
         return type;
-    }
-
-    public enum Operation {
-        BUY,SELL;
     }
 }
