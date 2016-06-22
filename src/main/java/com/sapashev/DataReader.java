@@ -1,7 +1,6 @@
 package com.sapashev;
 
 import com.sapashev.interfaces.Addable;
-import com.sapashev.interfaces.Operation;
 import com.sapashev.interfaces.OrderType;
 import com.sapashev.interfaces.ReadConnector;
 
@@ -14,12 +13,12 @@ import com.sapashev.interfaces.ReadConnector;
 public class DataReader implements Runnable{
     private final Addable storage;
     private final ReadConnector connector;  //source of data should know connector object
-    private DeleteMarker deleteMarker;
+    private final DeleteMarker ordersToDelete;
 
-    public DataReader(final Addable storage, final ReadConnector connector, DeleteMarker marker){
+    public DataReader(final Addable storage, final ReadConnector connector, DeleteMarker ordersToDelete){
         this.storage = storage;
         this.connector = connector;
-        this.deleteMarker = marker;
+        this.ordersToDelete = ordersToDelete;
     }
 
     public void run () {
@@ -28,8 +27,10 @@ public class DataReader implements Runnable{
         while (!stop){
             order = connector.read();
             if(order.getType() == OrderType.DELETE){
-                deleteMarker.key = order.getOrderID();
-                deleteMarker.notify();
+                ordersToDelete.keys.add(order.getOrderID());
+                synchronized (ordersToDelete){
+                    ordersToDelete.notify();
+                }
             }
             if (order != null){
                 storage.add(order);
