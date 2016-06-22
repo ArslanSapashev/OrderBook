@@ -11,7 +11,8 @@ import java.util.List;
  * Stores order objects in simple non-synchronized list.
  * @author Arslan Sapashev
  * @since 21.06.2016
- * @version 1.0 */
+ * @version 1.0
+ */
 public class StorageListNotSync implements Addable, Removable, Iterable<Order> {
     List<Order> list = new ArrayList<Order>();
 
