@@ -13,7 +13,7 @@ import java.util.List;
  * @since 21.06.2016
  * @version 1.0
  */
-public class StorageListNotSync implements Addable, Removable, Iterable<Order> {
+public class StorageList implements Addable, Removable, Iterable<Order> {
     List<Order> list = new ArrayList<Order>();
 
     public void add (Order order) {
@@ -26,7 +26,8 @@ public class StorageListNotSync implements Addable, Removable, Iterable<Order> {
         if(index >=0 && index < list.size()){
             try{
                 if(list.get(index).lock.tryLock()){
-                    list.set(index, null);
+                    isOrderLocked = true;
+                    list.set(index, new Order("null",Operation.BUY,0,0,0,OrderType.ADD));
                     isRemoved = true;
                 }
             }
@@ -51,8 +52,11 @@ public class StorageListNotSync implements Addable, Removable, Iterable<Order> {
         }
 
         public Order next () {
-            Order order = list.get(index++);
-            order.lock.lock();
+            Order order = null;
+            if(index < list.size()){
+                order = list.get(index++);
+                order.lock.lock();
+            }
             return order;
         }
 

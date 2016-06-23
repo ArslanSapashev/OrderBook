@@ -28,13 +28,13 @@ public class DeleteThread implements Runnable{
     public void run () {
         boolean stop = false;
         while (!stop){
-            Iterator<Integer> iter = deleteMarker.iterator();
-            while (iter.hasNext()){
-                storage.remove(iter.next());
-            }
-            deleteMarker.keys.clear();
             try {
                 synchronized (deleteMarker){
+                    Iterator<Integer> iter = deleteMarker.iterator();
+                    while (iter.hasNext()){
+                        storage.remove(iter.next());
+                    }
+                    deleteMarker.keys.clear();
                     deleteMarker.wait();
                 }
             }
