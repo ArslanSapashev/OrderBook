@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Stores order objects in simple non-synchronized list.
+ * Stores Order objects in ArrayList.
  * @author Arslan Sapashev
  * @since 21.06.2016
  * @version 1.0
