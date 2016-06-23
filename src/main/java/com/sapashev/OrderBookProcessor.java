@@ -25,17 +25,19 @@ public class OrderBookProcessor implements Runnable {
         this.orders = orders;
     }
 
-    private void fill(){
+    private void fillBidAskLists (){
         Iterator<Order> iterator = orders.iterator();
-        if(iterator.hasNext()){
+        while (iterator.hasNext()){
             Order order = iterator.next();
             if (this.bookName.equals(order.getBook())){
                 switch (order.getOperation()){
                     case BUY:
-                        bid.add(order);
+                        matchBuyOrder(order);
+                        this.sort();
                         break;
                     case SELL:
-                        ask.add(order);
+                        matchSellOrder(order);
+                        this.sort();
                         break;
                 }
             }
@@ -47,6 +49,7 @@ public class OrderBookProcessor implements Runnable {
         Collections.sort(ask, new AscendingPrice());
     }
 
+    //WARNING!!! That method must be invoked ONLY on ask list sorted at ascending manner.
     private void matchBuyOrder(Order buyOrder){
         Iterator<Order> iterator = ask.iterator();
         if(iterator.hasNext()){
@@ -75,6 +78,8 @@ public class OrderBookProcessor implements Runnable {
             bid.add(buyOrder);
         }
     }
+
+    //WARNING!!! That method must be invoked ONLY on bid list sorted at descending manner.
 
     private void matchSellOrder(Order sellOrder){
         Iterator<Order> iterator = bid.iterator();
