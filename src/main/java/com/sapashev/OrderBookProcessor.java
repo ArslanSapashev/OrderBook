@@ -51,12 +51,23 @@ public class OrderBookProcessor implements Runnable {
         }
     }
 
+    /**
+     * Sorts bid list in Descending manner and ask list in ascending manner.
+     */
     private void sort(){
         Collections.sort(bid,new DescendingPrice());
         Collections.sort(ask, new AscendingPrice());
     }
 
-    //WARNING!!! That method must be invoked ONLY on ask list sorted at ascending manner.
+    /**
+     * WARNING!!! That method must be invoked ONLY on ask list sorted at ascending manner.
+     * Checks if that order could be executed (order price overlaps the best price of opposite ladder)
+     * if they overlaps, order volume will be subtracted from overlapped price volume.
+     * That process repeats recursively until volume opposite orders with overlapped price will be exhausted.
+     * If after that order's volume will still be more than zero,
+     * it would be placed to corresponding ladder (bid/ask lists).
+     * @param buyOrder - order from common storage which Operation type is BUY.
+     */
     private void matchBuyOrder(Order buyOrder){
         Iterator<Order> iterator = ask.iterator();
         if(iterator.hasNext()){
@@ -86,8 +97,15 @@ public class OrderBookProcessor implements Runnable {
         }
     }
 
-    //WARNING!!! That method must be invoked ONLY on bid list sorted at descending manner.
-
+    /**
+     * WARNING!!! That method must be invoked ONLY on bid list sorted at descending manner.
+     * Checks if that order could be executed (order price overlaps the best price of opposite ladder)
+     * if they overlaps, order volume will be subtracted from overlapped price volume.
+     * That process repeats recursively until volume opposite orders with overlapped price will be exhausted.
+     * If after that order's volume will still be more than zero,
+     * it would be placed to corresponding ladder (bid/ask lists).
+     * @param sellOrder - order from common storage which Operation type is SELL.
+     */
     private void matchSellOrder(Order sellOrder){
         Iterator<Order> iterator = bid.iterator();
         if(iterator.hasNext()){
