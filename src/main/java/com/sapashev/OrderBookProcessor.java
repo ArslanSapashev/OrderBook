@@ -71,6 +71,8 @@ public class OrderBookProcessor implements Runnable {
             if(buyPrice < sellPrice){
                 bid.add(buyOrder);
             }
+        } else {
+            bid.add(buyOrder);
         }
     }
 
