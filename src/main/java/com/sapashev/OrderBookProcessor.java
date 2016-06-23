@@ -4,6 +4,7 @@ import com.sapashev.interfaces.Getable;
 import com.sapashev.interfaces.Operation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class OrderBookProcessor implements Runnable {
                 }
             }
         }
+    }
+
+    private void sort(){
+        Collections.sort(bid,new DescendingPrice());
+        Collections.sort(ask, new AscendingPrice());
     }
 
     private void matchBuyOrder(Order order){
