@@ -1,35 +1,42 @@
 package com.sapashev;
 
-import com.sapashev.interfaces.Getable;
-import com.sapashev.interfaces.Operation;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Contains all Order objects which "book" field equals to "bookName" of the OrderBookProcessor object.
+ * Contains all Order objects which "book" field equals to "book" of the OrderBookProcessor object.
+ * That class passes through common storage and retrieves orders with matching book.
  * @author Arslan Sapashev
  * @since 21.06.2016
  * @version 1.0
  */
 public class OrderBookProcessor implements Runnable {
-    private final String bookName;
+    private final String book;
     private final Iterable<Order> orders;
     private final List<Order> bid = new ArrayList<Order>();
     private final List<Order> ask = new ArrayList<Order>();
 
     public OrderBookProcessor (String bookName, Iterable<Order> orders) {
-        this.bookName = bookName;
+        this.book = bookName;
         this.orders = orders;
     }
 
+    /**
+     * Retrieves orders from common storage one by one
+     * Checks if order "book" field matches "book" field of this object, and if matches:
+     * checks if that order could be executed (order price overlaps the best price of opposite ladder)
+     * if they overlaps, order volume will be subtracted from overlapped price volume.
+     * That process repeats recursively until volume opposite orders with overlapped price will be exhausted.
+     * If after that order's volume will still be more than zero,
+     * it would be placed to corresponding ladder (bid/ask lists).
+     */
     private void fillBidAskLists (){
         Iterator<Order> iterator = orders.iterator();
         while (iterator.hasNext()){
             Order order = iterator.next();
-            if (this.bookName.equals(order.getBook())){
+            if (this.book.equals(order.getBook())){
                 switch (order.getOperation()){
                     case BUY:
                         matchBuyOrder(order);
