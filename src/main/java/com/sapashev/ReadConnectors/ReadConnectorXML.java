@@ -4,7 +4,7 @@ import com.sapashev.Order;
 import com.sapashev.interfaces.ReadConnector;
 
 /**
- * Stores trade orders
+ * Reads quotes from XML file and wraps each entry in Order object.
  * @author Arslan Sapashev
  * @since 21.06.2016
  * @version 1.0
