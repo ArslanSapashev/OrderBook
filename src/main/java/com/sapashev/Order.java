@@ -15,7 +15,7 @@ public class Order {
     private final String book;
     private final Operation operation;
     private final int price;
-    private final int volume;
+    private int volume;
     private final int orderID;
     public volatile ReentrantLock lock = new ReentrantLock();
 
@@ -50,5 +50,9 @@ public class Order {
 
     public OrderType getType () {
         return type;
+    }
+
+    public void setVolume (int volume) {
+        this.volume = volume;
     }
 }
