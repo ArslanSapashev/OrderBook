@@ -76,6 +76,35 @@ public class OrderBookProcessor implements Runnable {
         }
     }
 
+    private void matchSellOrder(Order sellOrder){
+        Iterator<Order> iterator = bid.iterator();
+        if(iterator.hasNext()){
+            Order buyOrder = iterator.next();
+            int sellPrice = sellOrder.getPrice();
+            int sellVolume = sellOrder.getVolume();
+            int buyPrice = buyOrder.getPrice();
+            int buyVolume = buyOrder.getVolume();
+            if(sellPrice <= buyPrice){
+                if(sellVolume > buyVolume){
+                    sellOrder.setVolume(sellVolume - buyVolume);
+                    iterator.remove();
+                    matchSellOrder(sellOrder);
+                }
+                if(sellVolume == buyVolume){
+                    iterator.remove();
+                }
+                if(sellVolume < buyVolume){
+                    buyOrder.setVolume(buyVolume - sellVolume);
+                }
+            }
+            if(sellPrice > buyPrice){
+                ask.add(sellOrder);
+            }
+        } else {
+            ask.add(sellOrder);
+        }
+    }
+
     public void run () {
 
     }
