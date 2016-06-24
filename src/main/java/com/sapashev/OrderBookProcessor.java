@@ -139,10 +139,21 @@ public class OrderBookProcessor implements Runnable {
      * Prints formatted order book to the standard output stream
      */
     private void print(){
+        List<String> listToPrint = iterateBidAskForComposite();
+        printHeader();
+        for(String s : listToPrint){
+            System.out.println(s);
+        }
+    }
+
+    /**
+     * Iterates through bid and ask order lists to join price and volume in one string.
+     * @return
+     */
+    private List<String> iterateBidAskForComposite () {
         Order bidOrder = null;
         Order askOrder = null;
         List<String> listToPrint = new ArrayList<String>();
-        printHeader();
         while (bid.iterator().hasNext() || ask.iterator().hasNext()){
             if(bid.iterator().hasNext()){
                 bidOrder = bid.iterator().next();
@@ -150,11 +161,9 @@ public class OrderBookProcessor implements Runnable {
             if(ask.iterator().hasNext()){
                 askOrder = ask.iterator().next();
             }
-            joinBidAskPriceAndVolume(bidOrder, askOrder,listToPrint);
+            joinPriceAndVolume(bidOrder, askOrder,listToPrint);
         }
-        for(String s : listToPrint){
-            System.out.println(s);
-        }
+        return listToPrint;
     }
 
     /**
@@ -172,7 +181,7 @@ public class OrderBookProcessor implements Runnable {
      * @param askOrder - ask order
      * @param list - list that stores unified strings
      */
-    private void joinBidAskPriceAndVolume (Order bidOrder, Order askOrder, List<String> list){
+    private void joinPriceAndVolume (Order bidOrder, Order askOrder, List<String> list){
         String bidString;
         String askString;
         if(bidOrder != null){
