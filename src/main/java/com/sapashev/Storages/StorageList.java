@@ -13,7 +13,7 @@ import java.util.List;
  * @since 21.06.2016
  * @version 1.0
  */
-public class StorageList implements Addable, Removable, Iterable<Order> {
+public class StorageList implements Addable, Iterable<Order> {
     List<Order> list = new ArrayList<Order>();
 
     public void add (Order order) {
@@ -55,11 +55,10 @@ public class StorageList implements Addable, Removable, Iterable<Order> {
             Order order = null;
             if(index < list.size()){
                 order = list.get(index++);
-                order.lock.lock();
+                //order.lock.lock();   НАДО ЧТО ТО ПРИДУМАТЬ ДЛЯ ПАРАЛЛЕЛЬНОЙ ОБРАБОТКИ
             }
             return order;
         }
-
         public void remove () {
             throw new UnsupportedOperationException("Remove of elements is prohibited");
         }

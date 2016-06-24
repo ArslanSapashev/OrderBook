@@ -40,7 +40,7 @@ public class OrderBookProcessor implements Runnable {
                 switch (order.getOperation()){
                     case BUY:
                         matchBuyOrder(order);
-                        this.sort();
+                        this.sort();    //СТОИТ ЛИ СОРТИТЬ КАЖДЫЙ РАЗ ???
                         break;
                     case SELL:
                         matchSellOrder(order);
@@ -133,6 +133,59 @@ public class OrderBookProcessor implements Runnable {
         } else {
             ask.add(sellOrder);
         }
+    }
+
+    /**
+     * Prints formatted order book to the standard output stream
+     */
+    private void print(){
+        Order bidOrder = null;
+        Order askOrder = null;
+        List<String> listToPrint = new ArrayList<String>();
+        printHeader();
+        while (bid.iterator().hasNext() || ask.iterator().hasNext()){
+            if(bid.iterator().hasNext()){
+                bidOrder = bid.iterator().next();
+            }
+            if(ask.iterator().hasNext()){
+                askOrder = ask.iterator().next();
+            }
+            joinBidAskPriceAndVolume(bidOrder, askOrder,listToPrint);
+        }
+        for(String s : listToPrint){
+            System.out.println(s);
+        }
+    }
+
+    /**
+     * Prints header of order book
+     */
+    private void printHeader () {
+        System.out.printf("Order book: %s\n", this.book);
+        System.out.println("BID\t\tASK");
+        System.out.println("Volume@Price\tVolume@Price");
+    }
+
+    /**
+     * Joins volume and price of bid and ask orders to the one string and puts it to result string list.
+     * @param bidOrder - bid order
+     * @param askOrder - ask order
+     * @param list - list that stores unified strings
+     */
+    private void joinBidAskPriceAndVolume (Order bidOrder, Order askOrder, List<String> list){
+        String bidString;
+        String askString;
+        if(bidOrder != null){
+            bidString = String.format("%d@%d",bidOrder.getVolume(),bidOrder.getPrice());
+        } else {
+            bidString = "---------";
+        }
+        if(askOrder != null){
+            askString = String.format("%d@%d",askOrder.getVolume(),askOrder.getPrice());
+        } else {
+            askString = "---------";
+        }
+        list.add(bidString + askString);
     }
 
     public void run () {

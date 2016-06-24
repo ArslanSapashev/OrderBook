@@ -1,6 +1,5 @@
 package com.sapashev;
 
-import com.sapashev.interfaces.Addable;
 import com.sapashev.interfaces.Removable;
 
 import java.util.Iterator;
@@ -13,12 +12,12 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class DeleteThread implements Runnable{
-    private final DeleteMarker deleteMarker;
+    private final DeleteMarker ordersToDelete;
     private final Removable storage;
 
     public DeleteThread(final Removable storage, DeleteMarker deleteMarker){
         this.storage = storage;
-        this.deleteMarker = deleteMarker;
+        this.ordersToDelete = deleteMarker;
     }
 
     //Данный поток удаляет приказы по их orderID, т.к. в момент получения уведомления от другого потока (notify)
@@ -29,13 +28,13 @@ public class DeleteThread implements Runnable{
         boolean stop = false;
         while (!stop){
             try {
-                synchronized (deleteMarker){
-                    Iterator<Integer> iter = deleteMarker.iterator();
+                synchronized (ordersToDelete){
+                    Iterator<Integer> iter = ordersToDelete.iterator();
                     while (iter.hasNext()){
                         storage.remove(iter.next());
                     }
-                    deleteMarker.keys.clear();
-                    deleteMarker.wait();
+                    ordersToDelete.keys.clear();
+                    ordersToDelete.wait();
                 }
             }
             catch (InterruptedException ex){
