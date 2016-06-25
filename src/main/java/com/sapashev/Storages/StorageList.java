@@ -26,6 +26,7 @@ public class StorageList implements Addable, Removable, Iterable<Order> {
             if(list.get(i).getOrderID() == orderID){
                 list.set(i,new Order("null",Operation.BUY,0,0,0,OrderType.DELETE));
                 isRemoved = true;
+                break;
             }
         }
         return isRemoved;

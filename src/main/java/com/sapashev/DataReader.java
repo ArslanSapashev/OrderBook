@@ -19,28 +19,29 @@ public class DataReader implements Runnable{
     private final Addable storage;
     private final ReadConnector connector;  //source of data should know connector object
     private final DeleteMarker ordersToDelete;
-    private final List<Thread> threads;
-    private final List<String> books = new ArrayList<String>();
+    private final List<String> books;
     private final ThreadSync sync;
     private final Logger LOG = LoggerFactory.getLogger(DataReader.class);
 
-    public DataReader(final Addable storage, final ReadConnector connector, final DeleteMarker ordersToDelete, final List<Thread> threads, final ThreadSync sync){
+    public DataReader(final Addable storage, final ReadConnector connector, final DeleteMarker ordersToDelete, final ThreadSync sync, List<String> books){
         this.storage = storage;
         this.connector = connector;
         this.ordersToDelete = ordersToDelete;
-        this.threads = threads;
         this.sync = sync;
+        this.books = books;
     }
 
     public void run () {
         boolean stop = false;
         Order order;
+        LOG.debug(String.format("Reading begin at %d%n", System.currentTimeMillis()));
+        connector.parse();
         while (!stop){
             order = connector.read();
             if(order == null){
                 stop = true;
                 this.sync.isReadingFinished = true;
-                LOG.debug("Reading ended");
+                LOG.debug(String.format("Reading ended at %d%n", System.currentTimeMillis()));
                 synchronized (ordersToDelete){
                     ordersToDelete.notify();
                 }
@@ -48,15 +49,12 @@ public class DataReader implements Runnable{
             }
             if(!books.contains(order.getBook())){
                 books.add(order.getBook());
-                threads.add(new Thread(new OrderBookProcessor(order.getBook(),(Iterable<Order>) storage)));
-                LOG.debug("New processing thread added");
             }
             if(order.getType() == OrderType.DELETE){
                 synchronized (ordersToDelete){
                     ordersToDelete.keys.add(order.getOrderID());
                     ordersToDelete.notify();
                 }
-                LOG.debug("DeleteThread invoked");
                 continue;
             }
             if (order.getType() == OrderType.ADD){

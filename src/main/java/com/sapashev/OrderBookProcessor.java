@@ -1,5 +1,8 @@
 package com.sapashev;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -17,10 +20,13 @@ public class OrderBookProcessor implements Runnable {
     private final Iterable<Order> orders;
     private final List<Order> bid = new ArrayList<Order>();
     private final List<Order> ask = new ArrayList<Order>();
+    private final List<Result> results;
+    private final Logger LOG = LoggerFactory.getLogger(OrderBookProcessor.class);
 
-    public OrderBookProcessor (String bookName, Iterable<Order> orders) {
+    public OrderBookProcessor (String bookName, Iterable<Order> orders, List<Result> results) {
         this.book = bookName;
         this.orders = orders;
+        this.results = results;
     }
 
     /**
@@ -33,6 +39,7 @@ public class OrderBookProcessor implements Runnable {
      * it would be placed to corresponding ladder (bid/ask lists).
      */
     private void fillBidAskLists (){
+        LOG.debug(String.format("OrderBookProcessor begins at %d%n", System.currentTimeMillis()));
         Iterator<Order> iterator = orders.iterator();
         while (iterator.hasNext()){
             Order order = iterator.next();
@@ -40,7 +47,7 @@ public class OrderBookProcessor implements Runnable {
                 switch (order.getOperation()){
                     case BUY:
                         matchBuyOrder(order);
-                        this.sortBID();    //СТОИТ ЛИ СОРТИТЬ КАЖДЫЙ РАЗ ???
+                        this.sortBID();
                         break;
                     case SELL:
                         matchSellOrder(order);
@@ -49,6 +56,7 @@ public class OrderBookProcessor implements Runnable {
                 }
             }
         }
+        LOG.debug(String.format("OrderBookProcessor ends at %d%n", System.currentTimeMillis()));
     }
 
     /**
@@ -137,75 +145,11 @@ public class OrderBookProcessor implements Runnable {
         }
     }
 
-    /**
-     * Prints formatted order book to the standard output stream
-     */
-    private void print(){
-        List<String> listToPrint = iterateBidAskForComposite();
-        printHeader();
-        for(String s : listToPrint){
-            System.out.println(s);
-        }
-    }
 
-    /**
-     * Iterates through bid and ask order lists to join price and volume in one string.
-     * @return
-     */
-    private List<String> iterateBidAskForComposite () {
-        Order bidOrder = null;
-        Order askOrder = null;
-        Iterator<Order> iterBID = bid.iterator();
-        Iterator<Order> iterASK = ask.iterator();
-
-        List<String> listToPrint = new ArrayList<String>();
-        while (iterBID.hasNext() || iterASK.hasNext()){
-            if(iterBID.hasNext()){
-                bidOrder = iterBID.next();
-            }
-            if(iterASK.hasNext()){
-                askOrder = iterASK.next();
-            }
-            joinPriceAndVolume(bidOrder, askOrder,listToPrint);
-            bidOrder = null;
-            askOrder = null;
-        }
-        return listToPrint;
-    }
-
-    /**
-     * Prints header of order book
-     */
-    private void printHeader () {
-        System.out.printf("Order book: %s\n", this.book);
-        System.out.println("BID\t\tASK");
-        System.out.println("Volume@Price\tVolume@Price");
-    }
-
-    /**
-     * Joins volume and price of bid and ask orders to the one string and puts it to result string list.
-     * @param bidOrder - bid order
-     * @param askOrder - ask order
-     * @param list - list that stores unified strings
-     */
-    private void joinPriceAndVolume (Order bidOrder, Order askOrder, List<String> list){
-        String bidString;
-        String askString;
-        if(bidOrder != null){
-            bidString = String.format("%d@%.2f\t",bidOrder.getVolume(),(float)(bidOrder.getPrice())/100);
-        } else {
-            bidString = "---------";
-        }
-        if(askOrder != null){
-            askString = String.format("%d@%.2f",askOrder.getVolume(),(float)(askOrder.getPrice())/100);
-        } else {
-            askString = "---------";
-        }
-        list.add(bidString + askString);
-    }
 
     public void run () {
         fillBidAskLists();
-        print();
+        results.add(new Result(book,bid,ask));
+        LOG.debug(String.format("Results by %s filled",Thread.currentThread()));
     }
 }

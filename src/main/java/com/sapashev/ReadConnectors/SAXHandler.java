@@ -27,13 +27,13 @@ public class SAXHandler extends DefaultHandler {
 
     @Override
     public void startDocument () throws SAXException {
-        LOG.debug("XML parsing started");
+        LOG.debug(String.format("XML parsing started at %d%n",System.currentTimeMillis()));
     }
 
     @Override
     public void endDocument () throws SAXException {
         orders.add(null); //этот null вываливается в StorageList строка 26
-        LOG.debug("XML file parsing finished");
+        LOG.debug(String.format("XML file parsing finished at %d%n", System.currentTimeMillis()));
     }
 
     @Override

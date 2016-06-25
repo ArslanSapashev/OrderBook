@@ -18,6 +18,5 @@ public class OrderBookProcessorTest {
         orders.add(new Order("book-1", Operation.BUY,25,15,2, OrderType.ADD));
         orders.add(new Order("book-1", Operation.SELL,30,100,3, OrderType.ADD));
 
-        new OrderBookProcessor("book-1",orders).run();
     }
 }

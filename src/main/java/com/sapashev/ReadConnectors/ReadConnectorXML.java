@@ -23,7 +23,6 @@ public class ReadConnectorXML implements ReadConnector {
     private final String source;
     List<Order> orders = new ArrayList<Order>();
     int index = 0;
-    boolean isParsed = false;
     private final Logger LOG = LoggerFactory.getLogger(ReadConnector.class);
 
     public ReadConnectorXML (String source) {
@@ -31,10 +30,6 @@ public class ReadConnectorXML implements ReadConnector {
     }
 
     public Order read () {
-        if(!isParsed){
-            parse();
-            isParsed = true;
-        }
         Order order = null;
         if(index < orders.size()){
             order = orders.get(this.index++);
@@ -42,7 +37,7 @@ public class ReadConnectorXML implements ReadConnector {
         return order;
     }
 
-    private void parse(){
+    public void parse(){
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         SAXHandler handler = new SAXHandler(orders);
 

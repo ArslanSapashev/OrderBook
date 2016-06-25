@@ -10,4 +10,5 @@ import com.sapashev.Order;
  */
 public interface ReadConnector {
     Order read();
+    void parse();
 }
