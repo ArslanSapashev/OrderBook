@@ -153,13 +153,16 @@ public class OrderBookProcessor implements Runnable {
     private List<String> iterateBidAskForComposite () {
         Order bidOrder = null;
         Order askOrder = null;
+        Iterator<Order> iterBID = bid.iterator();
+        Iterator<Order> iterASK = ask.iterator();
+
         List<String> listToPrint = new ArrayList<String>();
-        while (bid.iterator().hasNext() || ask.iterator().hasNext()){
-            if(bid.iterator().hasNext()){
-                bidOrder = bid.iterator().next();
+        while (iterBID.hasNext() || iterASK.hasNext()){
+            if(iterBID.hasNext()){
+                bidOrder = iterBID.next();
             }
-            if(ask.iterator().hasNext()){
-                askOrder = ask.iterator().next();
+            if(iterASK.hasNext()){
+                askOrder = iterASK.next();
             }
             joinPriceAndVolume(bidOrder, askOrder,listToPrint);
         }
@@ -198,6 +201,7 @@ public class OrderBookProcessor implements Runnable {
     }
 
     public void run () {
-        //TODO
+        fillBidAskLists();
+        print();
     }
 }

@@ -13,28 +13,19 @@ import java.util.List;
  * @since 21.06.2016
  * @version 1.0
  */
-public class StorageList implements Addable, Iterable<Order> {
+public class StorageList implements Addable, Removable, Iterable<Order> {
     List<Order> list = new ArrayList<Order>();
 
     public void add (Order order) {
         list.add(order);
     }
 
-    public boolean remove (int index) {
+    public boolean remove (int orderID) {
         boolean isRemoved = false;
-        boolean isOrderLocked = false;
-        if(index >=0 && index < list.size()){
-            try{
-                if(list.get(index).lock.tryLock()){
-                    isOrderLocked = true;
-                    list.set(index, new Order("null",Operation.BUY,0,0,0,OrderType.ADD));
-                    isRemoved = true;
-                }
-            }
-            finally {
-                if(isOrderLocked){
-                    list.get(index).lock.unlock();
-                }
+        for(int i = 0; i < list.size()-1;i++){
+            if(list.get(i).getOrderID() == orderID){
+                list.set(i,new Order("null",Operation.BUY,0,0,0,OrderType.DELETE));
+                isRemoved = true;
             }
         }
         return isRemoved;

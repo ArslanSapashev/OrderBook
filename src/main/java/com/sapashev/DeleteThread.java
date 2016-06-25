@@ -14,10 +14,12 @@ import java.util.Iterator;
 public class DeleteThread implements Runnable{
     private final DeleteMarker ordersToDelete;
     private final Removable storage;
+    private final ThreadSync sync;
 
-    public DeleteThread(final Removable storage, DeleteMarker deleteMarker){
+    public DeleteThread(final Removable storage, final DeleteMarker deleteMarker, final ThreadSync sync){
         this.storage = storage;
         this.ordersToDelete = deleteMarker;
+        this.sync = sync;
     }
 
     //Данный поток удаляет приказы по их orderID, т.к. в момент получения уведомления от другого потока (notify)
@@ -25,8 +27,7 @@ public class DeleteThread implements Runnable{
     //а данный объект при просыпании будет все удалять все объекты в списке DeleteMarker, после этого данный список
     // обнуляется тем самым гарантируется что ордера на удаления которые уже были обработаны не будут повторно выполнены.
     public void run () {
-        boolean stop = false;
-        while (!stop){
+        do {
             try {
                 synchronized (ordersToDelete){
                     Iterator<Integer> iter = ordersToDelete.iterator();
@@ -34,12 +35,16 @@ public class DeleteThread implements Runnable{
                         storage.remove(iter.next());
                     }
                     ordersToDelete.keys.clear();
+                    if(sync.isReadingFinished){
+                        sync.isDeletingFinished = true;
+                        break;
+                    }
                     ordersToDelete.wait();
                 }
             }
             catch (InterruptedException ex){
                 //TODO log here
             }
-        }
+        }while (!sync.isReadingFinished);
     }
 }
