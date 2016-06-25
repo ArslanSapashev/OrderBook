@@ -40,11 +40,11 @@ public class OrderBookProcessor implements Runnable {
                 switch (order.getOperation()){
                     case BUY:
                         matchBuyOrder(order);
-                        this.sort();    //СТОИТ ЛИ СОРТИТЬ КАЖДЫЙ РАЗ ???
+                        this.sortBID();    //СТОИТ ЛИ СОРТИТЬ КАЖДЫЙ РАЗ ???
                         break;
                     case SELL:
                         matchSellOrder(order);
-                        this.sort();
+                        this.sortASK();
                         break;
                 }
             }
@@ -54,8 +54,10 @@ public class OrderBookProcessor implements Runnable {
     /**
      * Sorts bid list in Descending manner and ask list in ascending manner.
      */
-    private void sort(){
+    private void sortBID(){
         Collections.sort(bid,new DescendingPrice());
+    }
+    private void sortASK(){
         Collections.sort(ask, new AscendingPrice());
     }
 
@@ -165,6 +167,8 @@ public class OrderBookProcessor implements Runnable {
                 askOrder = iterASK.next();
             }
             joinPriceAndVolume(bidOrder, askOrder,listToPrint);
+            bidOrder = null;
+            askOrder = null;
         }
         return listToPrint;
     }
@@ -188,7 +192,7 @@ public class OrderBookProcessor implements Runnable {
         String bidString;
         String askString;
         if(bidOrder != null){
-            bidString = String.format("%d@%.2f",bidOrder.getVolume(),(float)(bidOrder.getPrice())/100);
+            bidString = String.format("%d@%.2f\t",bidOrder.getVolume(),(float)(bidOrder.getPrice())/100);
         } else {
             bidString = "---------";
         }

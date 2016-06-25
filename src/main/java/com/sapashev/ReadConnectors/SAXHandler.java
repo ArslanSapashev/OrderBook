@@ -41,7 +41,7 @@ public class SAXHandler extends DefaultHandler {
         if("AddOrder".equalsIgnoreCase(qName)){
             OrderType orderType = OrderType.ADD;
             String book = attributes.getValue("book");
-            Operation operation = attributes.getValue("operation").equals(BUY) ? Operation.BUY : Operation.SELL;
+            Operation operation = attributes.getValue("operation").equals("BUY") ? Operation.BUY : Operation.SELL;
             int price = (int)(Double.valueOf(attributes.getValue("price"))* 100);
             int volume = Integer.parseInt(attributes.getValue("volume"));
             int orderId = Integer.parseInt(attributes.getValue("orderId"));
