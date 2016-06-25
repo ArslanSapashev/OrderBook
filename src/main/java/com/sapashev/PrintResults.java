@@ -8,7 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by Sony on 25.06.2016.
+ * Prints books. Data will be printed in columns.
+ * @author Arslan Sapashev
+ * @since 25.06.2016
+ * @version 1.0
  */
 public class PrintResults {
     private final String book;

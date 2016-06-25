@@ -145,8 +145,6 @@ public class OrderBookProcessor implements Runnable {
         }
     }
 
-
-
     public void run () {
         fillBidAskLists();
         results.add(new Result(book,bid,ask));

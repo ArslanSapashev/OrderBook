@@ -15,7 +15,10 @@ import java.util.List;
 import static com.sapashev.interfaces.Operation.BUY;
 
 /**
- * Created by Sony on 24.06.2016.
+ * Reads quotes from XML file and wraps each entry in Order object.
+ * @author Arslan Sapashev
+ * @since 24.06.2016
+ * @version 1.0
  */
 public class SAXHandler extends DefaultHandler {
     List<Order> orders;
@@ -36,6 +39,14 @@ public class SAXHandler extends DefaultHandler {
         LOG.debug(String.format("XML file parsing finished at %d%n", System.currentTimeMillis()));
     }
 
+    /**
+     * Reads each element, creates Order object and places it to list.
+     * @param uri
+     * @param localName
+     * @param qName
+     * @param attributes
+     * @throws SAXException
+     */
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if("AddOrder".equalsIgnoreCase(qName)){

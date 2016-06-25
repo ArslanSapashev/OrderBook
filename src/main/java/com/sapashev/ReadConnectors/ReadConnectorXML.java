@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reads quotes from XML file and wraps each entry in Order object.
+ * Wraps SAX parser. "orders" list contains raw (not sorted and Delete orders inclusive) orders from XML file.
  * @author Arslan Sapashev
  * @since 21.06.2016
  * @version 1.0
@@ -29,6 +29,10 @@ public class ReadConnectorXML implements ReadConnector {
         this.source = source;
     }
 
+    /**
+     * Returns to the DataRead object, next element of list of orders, that has been read by SAXHandler.
+     * @return - next order.
+     */
     public Order read () {
         Order order = null;
         if(index < orders.size()){
@@ -37,6 +41,9 @@ public class ReadConnectorXML implements ReadConnector {
         return order;
     }
 
+    /**
+     * Parses XML file for retrieving quotes.
+     */
     public void parse(){
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         SAXHandler handler = new SAXHandler(orders);

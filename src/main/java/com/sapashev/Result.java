@@ -3,7 +3,10 @@ package com.sapashev;
 import java.util.List;
 
 /**
- * Created by Sony on 25.06.2016.
+ * Processed book that contains not executed orders.
+ * @author Arslan Sapashev
+ * @since 25.06.2016
+ * @version 1.0
  */
 public class Result {
     private String book;

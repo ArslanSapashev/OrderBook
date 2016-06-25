@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 /**
  * Deletes orders (cancelled by a user).
- * Due to performance optimizations
  * @author Arslan Sapashev
  * @since 21.06.2016
  * @version 1.0
@@ -22,10 +21,13 @@ public class DeleteThread implements Runnable{
         this.sync = sync;
     }
 
-    //Данный поток удаляет приказы по их orderID, т.к. в момент получения уведомления от другого потока (notify)
-    //данный поток может пропусть, то DataReader помещает Order на удаление в list объекта DeleteMarker.
-    //а данный объект при просыпании будет все удалять все объекты в списке DeleteMarker, после этого данный список
-    // обнуляется тем самым гарантируется что ордера на удаления которые уже были обработаны не будут повторно выполнены.
+    /**
+     * That thread processes delete-orders based on orderID. The orderID is key to delete orders.
+     * When DataReader encounters in list of orders DeleteOrder it doesn't place it to list of orders, instead it
+     * places it to the list orderToDelete and notifies the thread that listens orderToDelete object.
+     * Due to DeleteThread could miss notification, all delete-orders are placed in the list, which will be processed
+     * one-by-one by DeleteThread. That garantees that all delete-orders will be processed.
+     */
     public void run () {
         do {
             try {
