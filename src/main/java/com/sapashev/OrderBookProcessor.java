@@ -188,12 +188,12 @@ public class OrderBookProcessor implements Runnable {
         String bidString;
         String askString;
         if(bidOrder != null){
-            bidString = String.format("%d@%d",bidOrder.getVolume(),bidOrder.getPrice());
+            bidString = String.format("%d@%.2f",bidOrder.getVolume(),(float)(bidOrder.getPrice())/100);
         } else {
             bidString = "---------";
         }
         if(askOrder != null){
-            askString = String.format("%d@%d",askOrder.getVolume(),askOrder.getPrice());
+            askString = String.format("%d@%.2f",askOrder.getVolume(),(float)(askOrder.getPrice())/100);
         } else {
             askString = "---------";
         }
