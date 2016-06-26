@@ -33,7 +33,7 @@ public class PrintResults {
      * Prints formatted order book to the standard output stream
      */
     public void print(){
-        LOG.debug(String.format("OrderBookProcessor begins at %d%n", System.currentTimeMillis()));
+        LOG.debug(String.format("Printing of %s begins at %d%n", book, System.currentTimeMillis()));
 
         /**
          * Converts compacted Map<Integer, Integer> to the list and sorts it in descending order.
@@ -78,7 +78,7 @@ public class PrintResults {
         for(String s : listToPrint){
             System.out.println(s);
         }
-        LOG.debug(String.format("OrderBookProcessor ended at %d%n", System.currentTimeMillis()));
+        LOG.debug(String.format("Printing %s ended at %d%n", book,System.currentTimeMillis()));
     }
 
     /**

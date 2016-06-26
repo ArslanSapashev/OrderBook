@@ -37,11 +37,9 @@ public class DeleteThread implements Runnable{
         } catch (InterruptedException e) {
             LOG.error("Interrupted exception " + e);
         }
-        synchronized (ordersToDelete) {
-            Iterator<Integer> iter = ordersToDelete.iterator();
-            while(iter.hasNext()){
-                storage.remove(iter.next());
-            }
+        Iterator<Integer> iter = ordersToDelete.iterator();
+        while(iter.hasNext()){
+            storage.remove(iter.next());
         }
     }
 }

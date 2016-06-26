@@ -50,12 +50,9 @@ public class DataReader implements Runnable{
                 books.add(order.getBook());
             }
             if(order.getType() == OrderType.DELETE){
-                synchronized (ordersToDelete){
-                    ordersToDelete.keys.add(order.getOrderID());
-                }
+                ordersToDelete.keys.add(order.getOrderID());
                 continue;
-            }
-            if (order.getType() == OrderType.ADD){
+            } else if (order.getType() == OrderType.ADD){
                 storage.add(order);
             }
         }
