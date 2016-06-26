@@ -3,8 +3,6 @@ package com.sapashev;
 import com.sapashev.ReadConnectors.ReadConnectorSXP;
 import com.sapashev.ReadConnectors.ReadConnectorXML;
 import com.sapashev.Storages.StorageLHMDel;
-import com.sapashev.Storages.StorageLinkedHashMap;
-import com.sapashev.Storages.StorageList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +61,7 @@ public class SimpleProcessor {
             }
         }
         for(Result r : results){
-            new PrintResults2(r).print();
+            new PrintResults(r).print();
         }
     }
 }
