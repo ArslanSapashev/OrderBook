@@ -1,6 +1,8 @@
 package com.sapashev;
 
 import com.sapashev.interfaces.Removable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -13,12 +15,13 @@ import java.util.Iterator;
 public class DeleteThread implements Runnable{
     private final DeleteMarker ordersToDelete;
     private final Removable storage;
-    private final ThreadSync sync;
+    private final Thread thread;
+    private final Logger LOG = LoggerFactory.getLogger(DeleteThread.class);
 
-    public DeleteThread(final Removable storage, final DeleteMarker deleteMarker, final ThreadSync sync){
+    public DeleteThread(final Removable storage, final DeleteMarker deleteMarker, final Thread thread){
         this.storage = storage;
         this.ordersToDelete = deleteMarker;
-        this.sync = sync;
+        this.thread = thread;
     }
 
     /**
@@ -29,24 +32,16 @@ public class DeleteThread implements Runnable{
      * one-by-one by DeleteThread. That garantees that all delete-orders will be processed.
      */
     public void run () {
-        do {
-            try {
-                synchronized (ordersToDelete){
-                    Iterator<Integer> iter = ordersToDelete.iterator();
-                    while (iter.hasNext()){
-                        storage.remove(iter.next());
-                    }
-                    ordersToDelete.keys.clear();
-                    if(sync.isReadingFinished){
-                        sync.isDeletingFinished = true;
-                        break;
-                    }
-                    ordersToDelete.wait();
-                }
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            LOG.error("Interrupted exception " + e);
+        }
+        synchronized (ordersToDelete) {
+            Iterator<Integer> iter = ordersToDelete.iterator();
+            while(iter.hasNext()){
+                storage.remove(iter.next());
             }
-            catch (InterruptedException ex){
-                //TODO log here
-            }
-        }while (!sync.isReadingFinished);
+        }
     }
 }

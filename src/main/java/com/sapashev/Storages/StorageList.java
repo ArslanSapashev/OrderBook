@@ -69,7 +69,6 @@ public class StorageList implements Addable, Removable, Iterable<Order> {
             Order order = null;
             if(index < list.size()){
                 order = list.get(index++);
-                //order.lock.lock();   НАДО ЧТО ТО ПРИДУМАТЬ ДЛЯ ПАРАЛЛЕЛЬНОЙ ОБРАБОТКИ
             }
             return order;
         }

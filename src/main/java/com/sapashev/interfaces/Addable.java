@@ -10,4 +10,5 @@ import com.sapashev.Order;
  */
 public interface Addable {
     void add (Order order);
+    boolean remove(int index);
 }

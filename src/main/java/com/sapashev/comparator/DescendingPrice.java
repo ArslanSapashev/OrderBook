@@ -1,4 +1,6 @@
-package com.sapashev;
+package com.sapashev.comparator;
+
+import com.sapashev.Order;
 
 import java.util.Comparator;
 

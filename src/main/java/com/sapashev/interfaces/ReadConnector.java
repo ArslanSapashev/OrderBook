@@ -2,6 +2,8 @@ package com.sapashev.interfaces;
 
 import com.sapashev.Order;
 
+import java.io.FileNotFoundException;
+
 /**
  * Declares method for reading(retrieving) data from external source (like files, sockets etc.)
  * @author Arslan Sapashev
@@ -10,5 +12,5 @@ import com.sapashev.Order;
  */
 public interface ReadConnector {
     Order read();
-    void parse();
+    void parse() throws FileNotFoundException;
 }

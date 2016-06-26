@@ -1,11 +1,10 @@
 package com.sapashev;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Prints books. Data will be printed in columns.
@@ -97,4 +96,26 @@ public class PrintResults {
         }
         list.add(bidString + askString);
     }
+
+/*    private void compaction(List<Order> source, List<Integer> target){
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        for(Order o : source){
+            if(map.containsKey(o.getPrice())){
+                Integer integer = map.get(o.getPrice());
+                map.put(o.getPrice(),integer + o.getVolume());
+            } else {
+                map.put(o.getPrice(),o.getVolume());
+            }
+        }
+        Set set = map.entrySet();
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()){
+            Map.Entry entry = (Map.Entry) iterator.next();
+            target.add()
+        }
+        Map.Entry entry = (Map.Entry)iterator.next();
+
+        for()
+    }*/
 }

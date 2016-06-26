@@ -1,7 +1,10 @@
 package com.sapashev;
 
+import com.sapashev.ReadConnectors.ReadConnectorSXP;
 import com.sapashev.ReadConnectors.ReadConnectorXML;
+import com.sapashev.Storages.StorageLHMDel;
 import com.sapashev.Storages.StorageLinkedHashMap;
+import com.sapashev.Storages.StorageList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,19 +27,19 @@ public class SimpleProcessor {
 
     public void start(String source){
 
-        ThreadSync sync = new ThreadSync();
-        StorageLinkedHashMap storage = new StorageLinkedHashMap();
+        StorageLHMDel storage = new StorageLHMDel();
         DeleteMarker deleteMarker = new DeleteMarker();
         List<Thread> threads = new ArrayList<Thread>();
         List<String> books = new ArrayList<String>();
         List<Result> results = Collections.synchronizedList(new ArrayList<Result>());
 
         ReadConnectorXML readConnectorXML = new ReadConnectorXML(source);
-        DeleteThread deleteThread = new DeleteThread(storage,deleteMarker,sync);
-        DataReader dataReader = new DataReader(storage,readConnectorXML,deleteMarker,sync, books);
-
-        Thread thread1 = new Thread(deleteThread);
+        ReadConnectorSXP readConnectorSXP = new ReadConnectorSXP(source);
+        DataReader dataReader = new DataReader(storage,readConnectorXML,deleteMarker, books);
         Thread thread2 = new Thread(dataReader);
+        DeleteThread deleteThread = new DeleteThread(storage,deleteMarker, thread2);
+        Thread thread1 = new Thread(deleteThread);
+
         thread1.start();
         thread2.start();
         LOG.debug("DataReader and DeleteThread has beeing started");
@@ -60,7 +63,7 @@ public class SimpleProcessor {
             }
         }
         for(Result r : results){
-            new PrintResults(r).print();
+            new PrintResults2(r).print();
         }
     }
 }

@@ -5,8 +5,6 @@ import com.sapashev.interfaces.Addable;
 import com.sapashev.interfaces.Operation;
 import com.sapashev.interfaces.OrderType;
 import com.sapashev.interfaces.Removable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -19,9 +17,8 @@ import java.util.Set;
  * @since 25.06.2016
  * @version 1.0
  */
-public class StorageLinkedHashMap implements Addable, Removable, Iterable<Order> {
+public class StorageLHMDel implements Addable, Removable, Iterable<Order> {
     LinkedHashMap<Integer, Order> orders = new LinkedHashMap<Integer, Order>();
-    private final Logger LOG = LoggerFactory.getLogger(StorageLinkedHashMap.class);
 
     /**
      * Adds specified order to the collection.
@@ -32,14 +29,13 @@ public class StorageLinkedHashMap implements Addable, Removable, Iterable<Order>
     }
 
     /**
-     * Due to multithreading performance optimization, there is no opportunity to delete element of the collection.
-     * Instead element to be deleted, will be replaced with new empty one.
+     * Deletes order object from the common storage based on orderID which used as key.
      * @param index - ID of order to be deleted.
      * @return
      */
     public boolean remove (int index) {
         boolean isRemoved = false;
-        if(orders.put(index,new Order("null", Operation.BUY,0,0,0, OrderType.DELETE)) != null){
+        if(orders.remove(index) != null){
             isRemoved = true;
         }
         return isRemoved;
@@ -71,9 +67,7 @@ public class StorageLinkedHashMap implements Addable, Removable, Iterable<Order>
          */
         public Order next () {
             Map.Entry entry = (Map.Entry)iterator.next();
-            Order order = (Order)entry.getValue();
-            //LOG.debug(String.format("Map.Entry return of %s %s",order.getType(),order.getOperation()));
-            return order;
+            return (Order)entry.getValue();
         }
 
         /**

@@ -1,5 +1,7 @@
 package com.sapashev;
 
+import com.sapashev.comparator.AscendingPrice;
+import com.sapashev.comparator.DescendingPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,11 @@ public class OrderBookProcessor implements Runnable {
         this.results = results;
     }
 
+    public void run () {
+        fillBidAskLists();
+        results.add(new Result(book,bid,ask));
+    }
+
     /**
      * Retrieves orders from common storage one by one
      * Checks if order "book" field matches "book" field of this object, and if matches:
@@ -39,7 +46,7 @@ public class OrderBookProcessor implements Runnable {
      * it would be placed to corresponding ladder (bid/ask lists).
      */
     private void fillBidAskLists (){
-        LOG.debug(String.format("OrderBookProcessor begins at %d%n", System.currentTimeMillis()));
+        LOG.debug(String.format("%s begins at %d%n", book,System.currentTimeMillis()));
         Iterator<Order> iterator = orders.iterator();
         while (iterator.hasNext()){
             Order order = iterator.next();
@@ -56,15 +63,19 @@ public class OrderBookProcessor implements Runnable {
                 }
             }
         }
-        LOG.debug(String.format("OrderBookProcessor ends at %d%n", System.currentTimeMillis()));
+        LOG.debug(String.format("%s ends at %d%n", book, System.currentTimeMillis()));
     }
 
     /**
-     * Sorts bid list in Descending manner and ask list in ascending manner.
+     * Sorts bid list in descending manner.
      */
     private void sortBID(){
         Collections.sort(bid,new DescendingPrice());
     }
+
+    /**
+     * Sorts ask list in ascending manner.
+     */
     private void sortASK(){
         Collections.sort(ask, new AscendingPrice());
     }
@@ -143,11 +154,5 @@ public class OrderBookProcessor implements Runnable {
         } else {
             ask.add(sellOrder);
         }
-    }
-
-    public void run () {
-        fillBidAskLists();
-        results.add(new Result(book,bid,ask));
-        LOG.debug(String.format("Results by %s filled",Thread.currentThread()));
     }
 }
