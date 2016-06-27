@@ -43,6 +43,10 @@ public class ReadConnectorSXP implements ReadConnector {
     }
 
     public void parse() throws FileNotFoundException {
-        new SimpleParser(orders,source).parse();
+        try {
+            new SimpleParser2(orders,source).parse2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
