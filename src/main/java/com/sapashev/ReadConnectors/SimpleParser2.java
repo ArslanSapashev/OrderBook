@@ -26,39 +26,10 @@ public class SimpleParser2 {
         this.source = source;
     }
 
-    public void parse() throws FileNotFoundException{
+    public void parse () throws FileNotFoundException,IOException {
         BufferedReader reader = new BufferedReader(new FileReader(source));
         String line;
-        LOG.debug(String.format("Parsing has been begun at %d%n", System.currentTimeMillis()));
-        try {
-            while ((line = reader.readLine()) != null){
-                if(line.startsWith("<A")){
-                    String[] data = line.split("([\\s,=,\"])+");
-                    String book = data[2];
-                    Operation operation = (data[4].equals("BUY")) ? Operation.BUY : Operation.SELL;
-                    int price = (int)(Double.valueOf(data[6])*100);
-                    int volume = (int)(Double.valueOf(data[8])*1);
-                    int orderID = (int)(Double.valueOf(data[10])*1);
-                    OrderType type = OrderType.ADD;
-                    orders.add(new Order(book,operation,price,volume,orderID,type));
-                }
-                else if (line.startsWith("<D")){
-                    String[] data = line.split("([\\s,=,\"])+");
-                    String book = data[2];
-                    OrderType type = OrderType.DELETE;
-                    int orderID = (int)(Double.valueOf(data[4])*1);
-                    orders.add(new Order(book,Operation.BUY,0,0,orderID,type));
-                }
-            }
-        } catch (IOException e) {
-            LOG.error("IOException " + e);
-        }
-        LOG.debug(String.format("Parsing has been ended at %d%n", System.currentTimeMillis()));
-    }
-
-    public void parse2() throws FileNotFoundException,IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(source));
-        String line;
+        LOG.debug(String.format("Parse started at %s", System.currentTimeMillis()));
         while ((line = reader.readLine()) != null){
             if(line.startsWith("<A")){
                 List<String> list = new ArrayList<>();
@@ -80,7 +51,7 @@ public class SimpleParser2 {
                 orders.add(new Order(book,Operation.BUY,0,0,orderID,type));
             }
         }
-        System.out.println();
+        LOG.debug(String.format("Parse finished at %s", System.currentTimeMillis()));
     }
 
     private void readText(String text, int index, List<String> list){

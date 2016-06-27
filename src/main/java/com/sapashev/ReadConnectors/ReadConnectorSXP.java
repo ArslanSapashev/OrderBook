@@ -4,11 +4,7 @@ import com.sapashev.Order;
 import com.sapashev.interfaces.ReadConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +40,7 @@ public class ReadConnectorSXP implements ReadConnector {
 
     public void parse() throws FileNotFoundException {
         try {
-            new SimpleParser2(orders,source).parse2();
+            new SimpleParser2(orders,source).parse();
         } catch (IOException e) {
             e.printStackTrace();
         }
