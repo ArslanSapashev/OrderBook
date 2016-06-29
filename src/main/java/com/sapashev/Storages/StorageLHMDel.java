@@ -1,9 +1,7 @@
-package com.sapashev.Storages;
+package com.sapashev.storages;
 
 import com.sapashev.Order;
 import com.sapashev.interfaces.Addable;
-import com.sapashev.interfaces.Operation;
-import com.sapashev.interfaces.OrderType;
 import com.sapashev.interfaces.Removable;
 
 import java.util.Iterator;

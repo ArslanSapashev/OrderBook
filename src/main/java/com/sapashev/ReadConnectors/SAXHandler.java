@@ -1,4 +1,4 @@
-package com.sapashev.ReadConnectors;
+package com.sapashev.readconnectors;
 
 import com.sapashev.Order;
 import com.sapashev.interfaces.Operation;
@@ -9,10 +9,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.sapashev.interfaces.Operation.BUY;
 
 /**
  * Reads quotes from XML file and wraps each entry in Order object.

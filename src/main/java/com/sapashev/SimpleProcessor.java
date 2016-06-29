@@ -1,8 +1,8 @@
 package com.sapashev;
 
-import com.sapashev.ReadConnectors.ReadConnectorSXP;
-import com.sapashev.ReadConnectors.ReadConnectorXML;
-import com.sapashev.Storages.StorageLHMDel;
+import com.sapashev.readconnectors.ReadConnectorSXP;
+import com.sapashev.readconnectors.ReadConnectorXML;
+import com.sapashev.storages.StorageLHMDel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class SimpleProcessor {
     }
 
     public void start(String source){
-
+        LOG.debug(String.format("Programm started at %d%n", System.currentTimeMillis()));
         StorageLHMDel storage = new StorageLHMDel();
         DeleteMarker deleteMarker = new DeleteMarker();
         List<Thread> threads = new ArrayList<Thread>();

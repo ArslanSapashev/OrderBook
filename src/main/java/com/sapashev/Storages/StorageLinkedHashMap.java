@@ -1,4 +1,4 @@
-package com.sapashev.Storages;
+package com.sapashev.storages;
 
 import com.sapashev.Order;
 import com.sapashev.interfaces.Addable;

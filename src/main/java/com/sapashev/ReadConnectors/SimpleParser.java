@@ -1,4 +1,4 @@
-package com.sapashev.ReadConnectors;
+package com.sapashev.readconnectors;
 
 import com.sapashev.Order;
 import com.sapashev.interfaces.Operation;
