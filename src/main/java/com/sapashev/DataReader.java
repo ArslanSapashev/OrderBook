@@ -37,7 +37,7 @@ public class DataReader implements Runnable{
         try {
             connector.parse();
         } catch (FileNotFoundException e) {
-            LOG.error("FileNotFoundException " + e);
+            LOG.error("FileNotFoundException ", e);
         }
         while (!stop){
             order = connector.read();

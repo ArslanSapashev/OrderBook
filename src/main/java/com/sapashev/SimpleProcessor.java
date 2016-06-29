@@ -45,7 +45,7 @@ public class SimpleProcessor {
             thread1.join();
             thread2.join();
         } catch (InterruptedException e) {
-            LOG.error("InterruptedException" + e);
+            LOG.error("InterruptedException", e);
         }
         for(String book : books){
             threads.add(new Thread(new OrderBookProcessor(book,storage, results)));
@@ -57,7 +57,7 @@ public class SimpleProcessor {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOG.error("InterruptedException", e);
             }
         }
         for(Result r : results){
